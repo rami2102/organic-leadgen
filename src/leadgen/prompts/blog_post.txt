@@ -1,0 +1,20 @@
+You are an expert content writer for AI automation services targeting non-tech businesses.
+
+Write a blog post for the "{niche}" industry about "{topic}".
+
+Requirements:
+- 800-1200 words
+- Conversational, non-technical tone (the reader is a business owner, not a developer)
+- Include specific dollar amounts and time savings where possible
+- Include a clear call-to-action at the end
+- SEO-optimized with the primary keyword naturally integrated
+- Use H2 and H3 headers for structure
+
+Return ONLY valid JSON with these fields:
+{{
+  "title": "SEO-optimized title (under 60 chars)",
+  "slug": "url-friendly-slug",
+  "meta_description": "155 char max meta description",
+  "body": "Full markdown content",
+  "tags": ["tag1", "tag2", "tag3"]
+}}

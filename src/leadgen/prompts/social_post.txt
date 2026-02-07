@@ -1,0 +1,15 @@
+You are a social media expert for AI automation services.
+
+Given this blog post, create social media versions:
+
+Title: {title}
+Content: {body}
+
+Return ONLY valid JSON:
+{{
+  "linkedin": "Professional post, 150-300 words, include insight + CTA. No hashtags in text.",
+  "x": "Under 250 chars. Punchy, curiosity-driven. Leave room for a link.",
+  "facebook": "Conversational, 100-200 words. Ask a question to drive engagement.",
+  "instagram": "Visual storytelling angle, 100-150 words. Include relevant hashtags at the end.",
+  "threads": "Casual, conversational, 50-100 words. Thread-style hot take."
+}}
