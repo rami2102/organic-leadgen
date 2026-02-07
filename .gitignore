@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+dist/
+*.egg-info/
+.venv/
+node_modules/
+public/
+resources/_gen/
+blog/public/
+.hugo_build.lock
