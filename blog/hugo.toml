@@ -1,0 +1,28 @@
+baseURL = "https://yourdomain.com/"
+languageCode = "en-us"
+title = "AI Agents for Your Business"
+theme = "PaperMod"
+
+[params]
+  description = "Learn how AI agents can automate your business operations and save you money."
+  author = "Your Name"
+  ShowReadingTime = true
+  ShowShareButtons = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  defaultTheme = "auto"
+
+[params.homeInfoParams]
+  Title = "AI Agents for Non-Tech Businesses"
+  Content = "Discover how AI automation can transform your restaurant, law firm, dental office, or trade business."
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[sitemap]
+  changefreq = "weekly"
+  priority = 0.5
