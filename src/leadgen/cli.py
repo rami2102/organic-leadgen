@@ -129,13 +129,18 @@ def cron(install, remove):
 
 
 @main.command()
-def autopublish():
-    """Auto-generate and git-push a blog post (used by cron)."""
-    day = date.today().timetuple().tm_yday
-    niche = NICHES[day % len(NICHES)]
-    topic = TOPICS[day % len(TOPICS)]
+@click.option("--niche", default=None, help="Override niche (default: auto-rotate)")
+@click.option("--topic", default=None, help="Override topic (default: auto-rotate)")
+def publish(niche, topic):
+    """Generate a blog post, commit, and push to GitHub now."""
+    if not niche:
+        day = date.today().timetuple().tm_yday
+        niche = NICHES[day % len(NICHES)]
+    if not topic:
+        day = date.today().timetuple().tm_yday
+        topic = TOPICS[day % len(TOPICS)]
 
-    click.echo(f"Auto-publishing: niche={niche}, topic={topic}")
+    click.echo(f"Publishing: niche={niche}, topic={topic}")
 
     config = load_config()
     pipeline = LeadgenPipeline(
@@ -162,3 +167,13 @@ def autopublish():
         click.echo("Committed and pushed to GitHub.")
     else:
         click.echo("No new content to commit.")
+
+
+@main.command()
+def autopublish():
+    """Auto-generate and git-push a blog post (used by cron). Same as 'publish' with no args."""
+    from click.testing import CliRunner
+    runner = CliRunner()
+    result = runner.invoke(publish, standalone_mode=False)
+    if result.output:
+        click.echo(result.output, nl=False)
