@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "roi-calculator/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    { "src": "/roi-calculator/(.*)", "dest": "/roi-calculator/$1" },
+    { "src": "/roi-calculator", "dest": "/roi-calculator/index.html" }
+  ]
+}
