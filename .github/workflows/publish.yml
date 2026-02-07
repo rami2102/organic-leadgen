@@ -1,0 +1,61 @@
+name: Generate and Publish Content
+
+on:
+  schedule:
+    # Run Mon/Wed/Fri at 9am UTC (3 posts/week)
+    - cron: '0 9 * * 1,3,5'
+  workflow_dispatch:
+    inputs:
+      niche:
+        description: 'Target niche'
+        required: true
+        default: 'restaurants'
+      topic:
+        description: 'Blog topic'
+        required: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama pull llama3.2
+
+      - name: Generate blog post
+        env:
+          OLLAMA_BASE_URL: http://localhost:11434
+          OLLAMA_MODEL: llama3.2
+          HUGO_BLOG_DIR: ./blog
+        run: |
+          # Rotate through niches based on day of year
+          NICHES=("restaurants" "law firms" "real estate" "dental offices" "hvac" "accounting")
+          DAY=$(date +%j)
+          NICHE=${NICHES[$((DAY % 6))]}
+          TOPICS=(
+            "how AI agents save money"
+            "automating customer service"
+            "reducing missed appointments"
+            "streamlining operations"
+          )
+          TOPIC=${TOPICS[$((DAY % 4))]}
+          leadgen generate --niche "$NICHE" --topic "$TOPIC"
+
+      - name: Commit and push new post
+        run: |
+          git config user.name "Leadgen Bot"
+          git config user.email "bot@yourdomain.com"
+          git add blog/content/
+          git diff --cached --quiet || git commit -m "content: auto-generated blog post"
+          git push
