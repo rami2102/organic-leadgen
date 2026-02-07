@@ -4,30 +4,23 @@
 
 - Python 3.11+
 - Git
-- Ollama (for local content generation)
+- Claude Code CLI (`npm install -g @anthropic-ai/claude-code`)
 
 ## Quick Start
 
 1. **Clone and install:**
    ```bash
    git clone <repo-url> && cd organic-leadgen
-   python -m venv .venv && source .venv/bin/activate
    pip install -e ".[dev]"
    ```
 
-2. **Install Ollama and pull a model:**
-   ```bash
-   curl -fsSL https://ollama.com/install.sh | sh
-   ollama pull llama3.2
-   ```
-
-3. **Copy and fill environment variables:**
+2. **Copy and fill environment variables:**
    ```bash
    cp .env.example .env
    # Edit .env with your API keys
    ```
 
-4. **Verify setup:**
+3. **Verify setup:**
    ```bash
    leadgen status
    ```
@@ -97,12 +90,22 @@ cd blog && hugo server -D
 
 ## Automated Schedule
 
-GitHub Actions runs 3x/week (Mon/Wed/Fri at 9am UTC):
+A local cron job runs 3x/week (Mon/Wed/Fri at 9am UTC):
 1. Generates a blog post targeting rotating niches
-2. Commits to main branch
+2. Commits and pushes to GitHub
 3. Triggers Hugo build + GitHub Pages deployment
 4. (Future) Cross-posts to Hashnode and Dev.to
 5. (Future) Schedules social posts via Postiz (LinkedIn, X, Facebook, Instagram, etc.)
+
+To install the cron job:
+```bash
+leadgen cron --install
+```
+
+To remove it:
+```bash
+leadgen cron --remove
+```
 
 ## Expected Growth Rate
 

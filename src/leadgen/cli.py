@@ -1,11 +1,23 @@
 """CLI entry point for the leadgen tool."""
 
 import asyncio
+import os
+import subprocess
+from datetime import date
+from pathlib import Path
 
 import click
 
 from leadgen.config import load_config
 from leadgen.pipeline import LeadgenPipeline
+
+NICHES = ["restaurants", "law firms", "real estate", "dental offices", "hvac", "accounting"]
+TOPICS = [
+    "how AI agents save money",
+    "automating customer service",
+    "reducing missed appointments",
+    "streamlining operations",
+]
 
 
 @click.group()
@@ -73,3 +85,80 @@ def keywords(niche, max_difficulty):
             f"  [{kw['keyword_difficulty']:2d}] {kw['keyword']} "
             f"({kw['search_volume']:,} searches/mo)"
         )
+
+
+@main.command()
+@click.option("--install", is_flag=True, help="Install the cron job (Mon/Wed/Fri 9am UTC)")
+@click.option("--remove", is_flag=True, help="Remove the cron job")
+def cron(install, remove):
+    """Manage the automated publishing cron job."""
+    project_dir = Path(__file__).resolve().parent.parent.parent
+    leadgen_bin = subprocess.run(
+        ["which", "leadgen"], capture_output=True, text=True
+    ).stdout.strip()
+
+    cron_comment = "# leadgen auto-publish"
+    cron_line = f"0 9 * * 1,3,5 cd {project_dir} && {leadgen_bin} autopublish >> {project_dir}/cron.log 2>&1 {cron_comment}"
+
+    if remove:
+        existing = subprocess.run(
+            ["crontab", "-l"], capture_output=True, text=True
+        ).stdout
+        new_crontab = "\n".join(
+            line for line in existing.splitlines()
+            if cron_comment not in line
+        )
+        subprocess.run(["crontab", "-"], input=new_crontab + "\n", text=True)
+        click.echo("Cron job removed.")
+        return
+
+    if install:
+        existing = subprocess.run(
+            ["crontab", "-l"], capture_output=True, text=True
+        ).stdout
+        if cron_comment in existing:
+            click.echo("Cron job already installed.")
+            return
+        new_crontab = existing.rstrip() + "\n" + cron_line + "\n"
+        subprocess.run(["crontab", "-"], input=new_crontab, text=True)
+        click.echo(f"Cron job installed: Mon/Wed/Fri 9am UTC")
+        click.echo(f"  Logs: {project_dir}/cron.log")
+        return
+
+    click.echo("Use --install or --remove. See: leadgen cron --help")
+
+
+@main.command()
+def autopublish():
+    """Auto-generate and git-push a blog post (used by cron)."""
+    day = date.today().timetuple().tm_yday
+    niche = NICHES[day % len(NICHES)]
+    topic = TOPICS[day % len(TOPICS)]
+
+    click.echo(f"Auto-publishing: niche={niche}, topic={topic}")
+
+    config = load_config()
+    pipeline = LeadgenPipeline(
+        content_model=config.content_model,
+        hugo_blog_dir=config.hugo_blog_dir,
+    )
+
+    result = asyncio.run(pipeline.generate_and_publish(niche=niche, topic=topic))
+    click.echo(f"Published: {result['title']}")
+    click.echo(f"  Path: {result['local_path']}")
+
+    # Git commit and push
+    project_dir = Path(__file__).resolve().parent.parent.parent
+    subprocess.run(["git", "add", "blog/content/"], cwd=project_dir)
+    diff = subprocess.run(
+        ["git", "diff", "--cached", "--quiet"], cwd=project_dir
+    )
+    if diff.returncode != 0:
+        subprocess.run(
+            ["git", "commit", "-m", f"content: auto-generated post ({niche})"],
+            cwd=project_dir,
+        )
+        subprocess.run(["git", "push"], cwd=project_dir)
+        click.echo("Committed and pushed to GitHub.")
+    else:
+        click.echo("No new content to commit.")
