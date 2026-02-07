@@ -9,3 +9,5 @@ public/
 resources/_gen/
 blog/public/
 .hugo_build.lock
+.worktrees/
+leadgen.db
