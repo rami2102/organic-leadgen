@@ -7,15 +7,11 @@ from leadgen.content_generator import ContentGenerator
 
 @pytest.fixture
 def generator():
-    return ContentGenerator(
-        base_url="http://localhost:11434",
-        model="llama3.2",
-    )
+    return ContentGenerator(model="sonnet")
 
 
 def test_generator_init(generator):
-    assert generator.base_url == "http://localhost:11434"
-    assert generator.model == "llama3.2"
+    assert generator.model == "sonnet"
 
 
 @pytest.mark.asyncio
@@ -29,9 +25,9 @@ async def test_generate_blog_post(generator):
     }
 
     with patch.object(
-        generator, "_call_ollama", new_callable=AsyncMock
+        generator, "_call_claude", new_callable=AsyncMock
     ) as mock_call:
-        mock_call.return_value = json.dumps(mock_response)
+        mock_call.return_value = mock_response
         result = await generator.generate_blog_post(
             niche="restaurants",
             topic="cost savings from AI agents",
@@ -54,9 +50,9 @@ async def test_generate_social_posts(generator):
     }
 
     with patch.object(
-        generator, "_call_ollama", new_callable=AsyncMock
+        generator, "_call_claude", new_callable=AsyncMock
     ) as mock_call:
-        mock_call.return_value = json.dumps(mock_response)
+        mock_call.return_value = mock_response
         result = await generator.repurpose_to_social(
             blog_title="5 Ways AI Agents Save Restaurants Money",
             blog_body="Full blog content here...",

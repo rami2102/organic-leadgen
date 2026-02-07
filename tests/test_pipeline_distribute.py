@@ -7,8 +7,7 @@ from leadgen.pipeline import LeadgenPipeline
 @pytest.fixture
 def pipeline():
     p = LeadgenPipeline(
-        ollama_url="http://localhost:11434",
-        ollama_model="llama3.2",
+        content_model="sonnet",
         hugo_blog_dir="/tmp/test-blog",
     )
     return p

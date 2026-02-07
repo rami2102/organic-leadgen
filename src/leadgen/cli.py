@@ -19,7 +19,7 @@ def status():
     """Show system status and configuration."""
     config = load_config()
     click.echo("Leadgen system: OK")
-    click.echo(f"  Ollama: {config.ollama_base_url} ({config.ollama_model})")
+    click.echo(f"  Content model: {config.content_model} (Claude Code CLI)")
     click.echo(f"  Hugo blog: {config.hugo_blog_dir}")
     click.echo(f"  Hashnode: {'configured' if config.hashnode_api_token else 'not set'}")
     click.echo(f"  Dev.to: {'configured' if config.devto_api_key else 'not set'}")
@@ -35,8 +35,7 @@ def generate(niche, topic):
     """Generate a blog post and publish locally."""
     config = load_config()
     pipeline = LeadgenPipeline(
-        ollama_url=config.ollama_base_url,
-        ollama_model=config.ollama_model,
+        content_model=config.content_model,
         hugo_blog_dir=config.hugo_blog_dir,
     )
 

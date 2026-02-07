@@ -9,9 +9,8 @@ from dotenv import load_dotenv
 
 @dataclass
 class Config:
-    # Ollama
-    ollama_base_url: str = "http://localhost:11434"
-    ollama_model: str = "llama3.2"
+    # Content generation (Claude Code CLI model)
+    content_model: str = "sonnet"
 
     # Hugo
     hugo_blog_dir: str = ""
@@ -39,8 +38,7 @@ class Config:
 def load_config() -> Config:
     load_dotenv()
     return Config(
-        ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
-        ollama_model=os.getenv("OLLAMA_MODEL", "llama3.2"),
+        content_model=os.getenv("CONTENT_MODEL", "sonnet"),
         hugo_blog_dir=os.getenv("HUGO_BLOG_DIR", str(Path.cwd() / "blog")),
         hashnode_api_token=os.getenv("HASHNODE_API_TOKEN", ""),
         hashnode_publication_id=os.getenv("HASHNODE_PUBLICATION_ID", ""),

@@ -28,15 +28,13 @@ jobs:
       - name: Install dependencies
         run: pip install -e .
 
-      - name: Install Ollama
-        run: |
-          curl -fsSL https://ollama.com/install.sh | sh
-          ollama pull llama3.2
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
 
       - name: Generate blog post
         env:
-          OLLAMA_BASE_URL: http://localhost:11434
-          OLLAMA_MODEL: llama3.2
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CONTENT_MODEL: sonnet
           HUGO_BLOG_DIR: ./blog
         run: |
           # Rotate through niches based on day of year
