@@ -143,16 +143,16 @@ The system publishes content but has no way to know if it's working:
 
 These require manual account setup and API key configuration:
 
-| Service | Status | Action Required |
-|---|---|---|
-| Hashnode | Module ready, no credentials | Create account, get API token |
-| Dev.to | Module ready, no credentials | Create account, get API key |
-| Postiz | Module ready, no credentials | Log in, connect channels, get API key |
-| ConvertKit | Module ready, no credentials | Create account, create form, get API key/secret |
-| DataForSEO | Module ready, no credentials | Create account, add $6 credit |
-| GitHub Pages | Workflow ready, not enabled | Enable in repo Settings > Pages |
-| Vercel | Config ready, not deployed | Create account, run `npx vercel` |
-| Tally | Placeholder in lead magnet | Create form, update iframe src |
+| Tool | GitHub Stars | Open Source | Tech Stack | What It Does |
+|---|---|---|---|---|
+| Hashnode | N/A | No (proprietary, free to use) | Node.js, React, GraphQL, Next.js | Cross-post blog articles to reach dev community |
+| Dev.to (Forem) | ~22.6k | Yes (AGPL-3.0) | Ruby on Rails, Preact, PostgreSQL, Redis | Cross-post blog articles to reach dev community |
+| Postiz | ~26.5k | Yes (AGPL-3.0) | Next.js, NestJS, Prisma, PostgreSQL, Redis | Distribute content to 27+ social media platforms |
+| ConvertKit / Kit | N/A | No (proprietary SaaS) | Ruby on Rails, React, MySQL | Email marketing — capture leads, send newsletters |
+| DataForSEO | N/A | No (proprietary API) | REST API; Python/TS/Java client SDKs | SEO keyword research — find what businesses search for |
+| GitHub Pages | N/A | Yes (platform by GitHub) | Ruby (Jekyll default), static hosting | Host the Hugo blog for free |
+| Vercel | CLI: ~14.8k | Partial (CLI open, platform proprietary) | Rust, Node.js, Go | Host the lead magnet (ROI calculator) for free |
+| Tally | N/A | No (proprietary SaaS) | Not disclosed (no-code form builder) | Embedded forms for lead capture in lead magnets |
 
 ---
 
@@ -209,3 +209,15 @@ Analytics Integration         ❌        ❌           ❌             ❌
 | DataForSEO | $6/mo | $0 | Not yet configured |
 | Domain (optional) | ~$1/mo | $0 | Not purchased |
 | **Total** | **~$7/mo** | **$0/mo** | Partially deployed |
+
+---
+
+## Core Tools & Dependencies
+
+| Tool | GitHub Stars | Open Source | Tech Stack | What It Does |
+|---|---|---|---|---|
+| Hugo | ~86.5k | Yes (Apache-2.0) | Go | Builds the static blog site from markdown files |
+| PaperMod | ~13.1k | Yes (MIT) | Hugo templates, CSS/JS | Blog theme — clean, fast, SEO-friendly design |
+| Ollama | ~162k | Yes (MIT) | Go, llama.cpp (C/C++) | Runs LLMs locally for free content generation |
+| Plausible | ~24.2k | Yes (AGPL-3.0) | Elixir, Phoenix, ClickHouse | Privacy-first web analytics (planned) |
+| Umami | ~35.1k | Yes (MIT) | Next.js, TypeScript, PostgreSQL | Lightweight web analytics alternative (planned) |
